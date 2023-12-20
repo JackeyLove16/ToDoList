@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/todolist") //port:8081
@@ -40,6 +41,13 @@ public class TaskController {
     public ResponseEntity<Boolean> getAllTasks(@PathVariable Long id) {
         taskService.deleteTaskByID(id);
         return ResponseEntity.ok(true);
+    }
+    @GetMapping("/byTaskName")
+    public ResponseEntity<Task> getTaskByTaskName(@RequestParam String taskName) {
+        Optional<Task> task = taskService.findTaskByTaskName(taskName);
+
+        return task.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
